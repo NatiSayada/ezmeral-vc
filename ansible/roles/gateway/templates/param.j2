@@ -1,0 +1,206 @@
+################################################################################
+#                        Compute Worker information                            #
+# This section is unique per compute worker you want to install.               #
+#                                                                              #
+# NOTE: Either compute worker section or gateway worker section or k8s host    #
+#       host must be uncommented - not all at the same time.                   #
+################################################################################
+#NODE_TYPE=worker
+
+## Worker IP address
+#WORKER=
+
+## Compute worker FQDN. This cannot be changed once the worker is successfully
+## added to BlueData cluster. Also, the initialization scripts set the host's
+## FQDN to this value if it is not already configured so.
+#WORKER_HOSTNAME=
+
+################################################################################
+#                         Gateway Worker information                           #
+# This section is unique per gateway worker you want to install.               #
+#                                                                              #
+# NOTE: Either compute worker section or gateway worker section or k8s host    #
+#       host must be uncommented - not all at the same time.                   #
+################################################################################
+#NODE_TYPE=proxy
+
+## Gateway worker IP address
+#GATEWAY_NODE_IP=
+
+## Gateway worker FQDN. This cannot be changed once the worker is successfully
+## added to BlueData cluster. Also, the initialization scripts set the host's
+## FQDN to this value if it is not already configured so.
+#GATEWAY_NODE_FQDN=
+
+################################################################################
+#                         K8s Host information                                 #
+# This section is unique per k8s worker you want to install.                   #
+#                                                                              #
+# NOTE: Either compute worker section or gateway worker section or k8s host    #
+#       host must be uncommented - not all at the same time.                   #
+################################################################################
+#NODE_TYPE=k8shost
+
+## K8s Worker IP address
+#WORKER=
+
+################################################################################
+#                         Cluster Erlang Cookie                                #
+# The cookie can be found on the controller in the home directory of the user  #
+# that installed the platform ($HOME/.erlang.cookie).                          #
+#                                                                              #
+# This cookie is required for Erlang nodes across the cluster to communicate   #
+# with one and another.                                                        #
+#                                                                              #
+################################################################################
+ERLANG_COOKIE={{ hostvars[groups['controller'][0]]['erlang_cookie']}}
+
+################################################################################
+#                             Force installation                               #
+# Use this with caution. Forcing an installation when pre-checks failed may    #
+# result in an unusable system.                                                #
+################################################################################
+## Force the installation? 'true' or 'false'
+FORCE=false
+
+################################################################################
+#                        Installation user and group                           #
+# All nodes in the BlueData physical cluster must be installed the same user.  #
+# Specify this if the common bundle is not being executed by the same user as  #
+# the user that will be running the BlueData services. Please refer to the     #
+# System requirements guide for information on permissions required for a      #
+# non-root user to install and run BlueData software.                          #
+################################################################################
+#BLUEDATA_USER=root
+#BLUEDATA_GROUP=root
+
+################################################################################
+#                         HDFS parameters                                      #
+# This is not a common options. It should be uncommented only when tiered      #
+# storage was used to configure HDFS (when used as a Tenant Storage).          #
+################################################################################
+## Report storage type? 'true' or 'false'
+#REPORT_STORAGE_TYPE=true
+
+################################################################################
+#                         Platform HA not configured                           #
+# Ensure the appropriate parameters are uncommented and set in this section    #
+# when Platform HA is not enabled.                                             #
+################################################################################
+## Is PLHA enabled?
+HAENABLED=false
+
+## Controller node's IP address.
+CONTROLLER={{hostvars[groups['controller'][0]]['ansible_default_ipv4']['address']}}
+
+## Controller node's FQDN.
+CONTROLLER_HOSTNAME={{hostvars[groups['controller'][0]]['ansible_fqdn']}}
+
+
+## Controller's unique ID. bdconfig --getvalue bdshared_nodes_controlleruniqueid
+
+################################################################################
+#                           Platform HA configured                             #
+# Ensure the appropriate parameters are uncommented and set in this section    #
+# when Platform HA is enabled.                                                 #
+################################################################################
+## Is Platform HA enabled?
+#HAENABLED=true
+
+## Controller node's IP address. A failover to okay but, his node must be alive
+## for a worker to be added.
+#CONTROLLER=
+
+## The original shadow controller node's IP address. This node must be alive for
+## the worker node to be added.
+#SHADOWCTRL=
+
+## The arbiter node's IP address. This node must be alive for the worker node to
+## be added.
+#ARBITER=
+
+## Controller node's FQDN.
+#CONTROLLER_HOSTNAME=
+
+## Shadow controller node's FQDN.
+#SHADOW_HOSTNAME=
+
+## Arbiter node's FQDN.
+#ARBITER_HOSTNAME=
+
+################################################################################
+#                       Miscellaneous parameters                               #
+#                                                                              #
+################################################################################
+## Automount root on the controller node. It must be the same on the worker too.
+CONTROLLER_AUTOMOUNT_ROOT=/net/
+
+## Bundle flavor used to install the controller. This may be either 'minimal' or
+## 'full'
+CONTROLLER_BUNDLE_FLAVOR=minimal
+
+## Skip configuring NTP? 'true' or 'false'
+#NO_NTP_CONFIG=false
+
+## Skip configuring NTP? 'true' or 'false'
+#NO_NTP_CONFIG=false
+
+## Control plane-only install? 'true' or 'false'
+#CONTROLPLANE_ONLY_INSTALL=true
+
+################################################################################
+#                           Network Proxy information                          #
+# If the controller was configured with network proxy information, please      #
+# specify it here.
+################################################################################
+#PROXY_URL=
+#NO_PROXY=
+
+
+## UDP port to listen for VXLAN Tunnel packets from other EPIC hosts.
+## The port must be the same across all hosts in a EPIC installation. The value
+## on the controller can be queried usign `bdconfig --getvalue bds_network_vxlanport`.
+## If that query returns nothing, preserve the default.
+VXLANPORT=4789
+
+## Controls whether the server should rollback to a clean state when an error
+## is encountered during installation. Setting it to 'false' helps with debugging
+## but the server should be manually cleaned up before re-attempting the
+## installation.
+## Values: 'true' or 'false'.
+#ROLLBACK_ON_ERROR='false'
+
+# If the controller was configured with --dockerrootsize that is different from 20
+# specify it here.
+DOCKER_ROOTSIZE=20
+
+## If the controller was upgraded from a version prior to the current one being
+## installed, check the output from its
+## "bdconfig --getvalue bds_storage_dockersd" command, and supply that value
+## here. The current (default) value is "overlay2", and "devicemapper" is the
+## other (older) option.
+#DOCKER_STORAGE_DRIVER=overlay2
+
+################################################################################
+#                        Installation DNSMASQ user and group                   #
+# The dnsmasq service needs to run as a user; default user is usually 'nobody'.#
+# Specify this if the admin wishes to run dnsmasq as a user other than the     #
+# 'nobody:nobody' identity.  The specified user and group must already exist   #
+# on the system, and the user must be a member of the specified group.         #
+################################################################################
+DNSMASQ_USER=nobody
+DNSMASQ_GRP=nobody
+
+################################################################################
+#                        The source for docker                                 #
+# New installs should use "community".                                         #
+# Upgrades from pre-5.1 should use "redhat"                                    #
+################################################################################
+DOCKER_SOURCE=community
+
+################################################################################
+#                        Internal parameters                                   #
+# WARNING: Do not modify these parameters.                                     #
+################################################################################
+ONWORKER=true
+AGENT_INSTALL=true

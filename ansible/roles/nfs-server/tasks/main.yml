@@ -1,0 +1,26 @@
+- name: Create a mountable directory if it does not exist
+  file:
+    path: /mnt/ezmeral-data
+    state: directory
+    mode: '775'
+
+- name: enable rpcbind nfslock nfs
+  service:
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+    - rpcbind
+    - nfslock
+    - nfs
+    - nfs-server
+
+- name: Copy exports file.
+  template:
+    src: exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart nfs-server
+    - run exportfs

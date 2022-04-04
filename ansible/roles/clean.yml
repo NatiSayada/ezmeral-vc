@@ -1,0 +1,9 @@
+---
+- hosts: controller
+  become: true
+
+  tasks:
+    - name: Execute the installer with --erase
+      shell: |
+        /opt/bluedata/bundles/hpe-cp-rhel-release-5.3-3031/startscript.sh --erase --force
+        wipefs -a -f /dev/sdc

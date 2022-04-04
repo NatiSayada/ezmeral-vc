@@ -1,0 +1,88 @@
+# - name: echo Configure gateway
+#   shell: |
+#     echo "{{ hostvars[item]['ansible_fqdn'] }}"
+#   with_items: "{{ groups['gateway'] }}"
+
+# - debug:
+#     msg: "{{ hostvars['10.151.8.202']['ansible_nodename'] }}"
+###
+
+- name: Update the timezone
+  timezone:
+    name: Asia/Jerusalem
+
+- name: Enable EPEL Repository on CentOS 7
+  yum:
+    name:
+      - epel-release
+      - bash-completion
+    state: latest
+  when: ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] == '7'
+  become: true
+
+- name: Upgrade all packages.
+  yum:
+    name: '*'
+    state: latest
+    lock_timeout: 180
+  tags: prep
+
+# Moved to cloud init packages
+- name: Install requierd apps.
+  yum:
+    name:
+    - cloud-utils-growpart
+    - wget
+    - curl
+    - nfs-utils
+    state: latest
+    lock_timeout: 180
+  tags: prep
+
+- name: Configure Disks
+  shell: |
+    growpart /dev/sda 2
+    pvresize /dev/sda2
+    lvextend -r -l +100%FREE /dev/centos/root > ~/disks.log
+  args:
+    creates: ~/disks.log
+
+- name: Update FQDN
+  hostname:
+    name: "{{ ansible_hostname }}.{{ domain_name }}"
+
+- name: Configure policy and state of SELinux
+  selinux:
+    state: permissive
+    policy: targeted
+  notify: reboot
+
+- name: Enable PubkeyAuthentication.
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#PubkeyAuthentication yes'
+    line: 'PubkeyAuthentication yes'
+  notify: 
+    - restart sshd
+
+- name: Disable PasswordAuthentication.
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#PasswordAuthentication yes'
+    line: 'PasswordAuthentication no'
+  notify: 
+    - restart sshd
+
+- name: Disable sudo password
+  lineinfile:
+    path: /etc/sudoers
+    regexp: '^#%wheel        ALL=(ALL)       NOPASSWD: ALL'
+    line: '%wheel        ALL=(ALL)       NOPASSWD: ALL'
+  
+- name: UPdate ARP setting on /etc/sysctl.conf
+  lineinfile:
+    path: /etc/sysctl.conf
+    line: "{{item}}"
+  loop:
+    - net.ipv4.conf.eth0.arp_ignore=0
+    - net.ipv4.conf.eth0.arp_announce=0

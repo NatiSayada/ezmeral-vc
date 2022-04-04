@@ -1,0 +1,9 @@
+---
+- shell: cat /root/.erlang.cookie
+  register: tempvar
+  tags: cookie
+
+- name: Update erlang with the cookie content
+  set_fact:
+    erlang_cookie: "{{ tempvar.stdout }}"
+  tags: cookie

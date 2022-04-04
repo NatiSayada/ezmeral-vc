@@ -1,0 +1,33 @@
+- name: Enable root ssh login.
+  lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#PermitRootLogin yes'
+        line: 'PermitRootLogin yes'
+  notify: 
+    - restart sshd
+    - add to cluster
+
+- name: Enable root PubkeyAuthentication login.
+  lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#PubkeyAuthentication yes'
+        line: 'PubkeyAuthentication yes'
+  notify: 
+    - restart sshd
+    - add to cluster
+
+# - name: Enable root AuthorizedKeysFile login.
+#   lineinfile:
+#         path: /etc/ssh/sshd_config
+#         regexp: '^#AuthorizedKeysFile'
+#         line: 'AuthorizedKeysFile=.ssh/authorized_keys'
+#   notify: 
+#     - restart sshd
+#     - add to cluster
+
+- name: Update the root password
+  user:
+    name: root
+    password: "{{root_pass}}"
+    update_password: always
+  notify: restart sshd

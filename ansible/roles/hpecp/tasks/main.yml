@@ -1,0 +1,40 @@
+---
+# hpecp cli docs: https://github.com/hpe-container-platform-community/hpecp-python-library
+- name: Check if gateway is installed
+  shell: ~/.local/bin/hpecp gateway list --output text
+  register: gw_status
+
+- name: lockdown status
+  shell: | 
+    ~/.local/bin/hpecp lock list -output json | grep -c 'locked": false,'
+  register: lockdown_status 
+
+- debug: "msg={{ lockdown_status }}"
+
+- name: Enter lockdown
+  shell: ~/.local/bin/hpecp lock create "Installing Gateway"
+  when: gw_status.stdout == "" and lockdown_status.stdout == "1"
+
+- name: Configure gateway
+  shell: |
+    LOG_LEVEL=DEBUG ~/.local/bin/hpecp gateway create-with-ssh-key --ip {{ item }} --proxy-node-hostname "{{ hostvars[item]['ansible_nodename'] }}" --ssh-key-file {{ez_folder}}/ssh_host_rsa_key
+  with_items: "{{ groups['gateway'] }}"
+  when: gw_status.stdout == ""
+  
+- name: Exit lockdown
+  shell: ~/.local/bin/hpecp lock delete-all --timeout-secs 1800
+  when: gw_status.stdout == ""
+
+- name: Check if workers installed
+  shell: ~/.local/bin/hpecp k8sworker list --output text
+  register: k8s_workers
+
+# - debug: "msg={{ hostvars[groups['workers']]['ansible_default_ipv4']['address'] }}"
+
+- name: Add k8s workers
+  shell: ~/.local/bin/hpecp k8sworker create_with_ssh_key --ip {{ item }} --ssh_key_file {{ez_folder}}/ssh_host_rsa_key --ephemeral-disks /dev/sdb --wait-for-operation-secs 600
+  with_items: "{{ groups['workers'] }}"
+  when: k8s_workers.stdout == ""
+
+  # TODO:
+  # choose disk with variable

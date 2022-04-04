@@ -1,0 +1,12 @@
+- name: reboot
+  reboot:
+    reboot_timeout: 3600
+
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted
+
+- name: add to cluster
+  debug: 
+    msg: "need to add the worker to the epic cluster here"

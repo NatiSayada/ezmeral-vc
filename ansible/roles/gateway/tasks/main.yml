@@ -1,0 +1,24 @@
+---
+- name: Prep the template
+  template:
+    src: param.j2
+    dest: /mnt/ezmeral-data/gateway.params
+
+- name: Create Directory for ezmeral.
+  file:
+    path: "{{ez_folder}}"
+    state: directory
+    mode: '0755'
+
+- name: Downloas the bin files.
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ez_folder}}/{{item.file_name}}"
+  loop:
+    - { url: "{{pre_check_url_path}}", file_name: "{{ bin_pre_check }}" }
+    - { url: "{{bin_url_path}}", file_name: "{{ bin_name }}" }
+
+- name: Install the gateway
+  shell: ".{{ez_folder}}/{{bin_name}} --params gateway.params --nodetype proxy --gateway-node-ip {{ansible_eth0.ipv4.address}} --gateway-node-hostname {{ansible_fqdn}}"
+  args:
+    chdir: /mnt/ezmeral-data

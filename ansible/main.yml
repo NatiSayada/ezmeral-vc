@@ -1,0 +1,67 @@
+---
+- name: testing modules.
+  hosts: all
+  vars:
+    - ez_password: "admin808090"
+
+  tasks:
+    - name: list all workers
+      debug:
+        msg: "{{ hostvars[groups['worker1'][0]]['ansible_default_ipv4']['address'] }}"
+    # - name: Get api session
+    #   uri:
+    #     url: "http://{{ansible_default_ipv4.address}}:8080/api/v2/session"
+    #     method: POST
+    #     body_format: json
+    #     body: |
+    #       {
+    #       "name": "admin",
+    #       "password": "{{ez_password}}",
+    #       "domain": "hpecplocal",
+    #       "tenant_name": "Demo Tenant"
+    #       }
+    #     status_code: 201
+    #     return_content: true
+    #   register: session_key
+
+    # - name: Create a session key
+    #   set_fact:
+    #     session_key_trimed: "{{ session_key.location | regex_replace('^http:(.*):8080', '')}}"
+
+    # - debug:
+    #     msg: "the session key is: {{session_key_trimed}}"
+
+    # - name: User the session token an get the site config
+    #   uri:
+    #     url: "http://{{ansible_default_ipv4.address}}:8080/api/v2/config"
+    #     return_content: true
+    #     method: GET
+    #     headers:
+    #       X-BDS-SESSION: "{{session_key_trimed}}"
+    #       Content-Type: application/json
+    #   register: site_config
+
+    # # - name: Add the worker node
+    # #   uri:
+    # #       url: "http://{{ansible_default_ipv4.address}}:8080/api/v1/workers"
+    # #       return_content: true
+    # #       method: POST
+    # #       headers:
+    # #           X-BDS-SESSION: "{{session_key_trimed}}"
+    # #           Content-Type: application/json
+    # #       body_format: json
+    # #       body:
+    # #           data:
+    # #               ip: "10.0.2.4"
+    # #               credentials:
+    # #                   type: "password_access"
+    # #                   password: "Umbrella7-Fun"
+    # #               tags:
+    # #                   - tagid: "/api/v2/tag/4"
+    # #                     tag_value: "az"
+    # #               purpose: "worker"
+
+    # #   register: add_worker_node
+
+    # - debug:
+    #     msg: "{{site_config}}"

@@ -1,0 +1,13 @@
+---
+# bin_url_path: "https://sayadastraccount.blob.core.windows.net/ezmeral/hpe-cp-rhel-release-5.3-3031.bin?sv=2020-10-02&st=2022-01-18T07%3A38%3A33Z&se=2023-01-19T07%3A38%3A00Z&sr=b&sp=r&sig=kUMHXatn%2BZDOLezchStM6eXTXFJEsulRkIY%2BfVdD26o%3D"
+# bin_name: "hpe-cp-rhel-release-5.3-3031.bin"
+bin_url_path: "https://ezmeral-platform-releases.s3.amazonaws.com/5.4/3064/hpe-cp-rhel-release-5.4-3064.bin"
+bin_name: "hpe-cp-rhel-release-5.4-3064.bin"
+pre_check_url_path: "https://sayadastraccount.blob.core.windows.net/ezmeral/hpe-cp-rhel-prechecks-5.3.bin?sv=2020-10-02&st=2022-01-18T11%3A15%3A36Z&se=2023-01-19T11%3A15%3A00Z&sr=b&sp=r&sig=bi8%2BvZ1uM%2FB08V6M25uruOpi2r6N6efKMGCk5pub4jo%3D"
+bin_pre_check: "hpe-cp-rhel-prechecks-5.3.bin"
+ez_folder: "/home/adminuser"
+ez_password: "admin808090"
+root_pass: "$6$rounds=656000$am7bAScCKIUb8JcN$gwSvQ7Oe6nukllJIGvKIVbDHxEL89ab3mSaXzDVNDj.BveMARTVmJT1Mi38Lwvkwzs0fY.1l6hvOVPNtYUdRl1"
+hcpdomain: "azhpe"
+project_id: ezlocal
+domain_name: ecp.demo

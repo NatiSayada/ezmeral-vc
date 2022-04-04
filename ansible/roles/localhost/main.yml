@@ -1,0 +1,13 @@
+- name: configure hpecp
+  copy:
+    dest: ~/.hpecp.conf
+    content: |-
+      [default]
+      api_host = {{ groups['controller'] | first }}
+      api_port = 8080
+      use_ssl = True
+      verify_ssl = False
+      warn_ssl = False
+      username = admin
+      password = {{ ez_password }}
+    force: yes

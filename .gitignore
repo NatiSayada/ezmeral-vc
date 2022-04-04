@@ -1,0 +1,14 @@
+# Compiled files
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.*
+.terraform.lock.hcl
+# logs
+*.log
+
+# Directories
+.terraform/
+.vagrant/
+
+# ansible
+ansible/hosts

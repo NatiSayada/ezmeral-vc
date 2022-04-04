@@ -1,0 +1,88 @@
+---
+
+- name: Configure hpecp
+  template:
+    src: hpecp.j2
+    dest: ~/.hpecp.conf
+
+- name: Check if install file exist
+  stat:
+    path: "{{ez_folder}}/{{bin_name}}"
+  register: files_dowloaded
+
+# - name: Downloas the bin files.
+#   get_url:
+#     url: "{{ bin_url_path }}"
+#     dest: "{{ez_folder}}/{{bin_name}}"
+#   when: not files_dowloaded.stat.exists
+
+# added the bin to the template
+    
+- name: Copy the bin file.
+  copy:
+    src: "/opt/{{bin_name}}"
+    dest: "{{ez_folder}}/{{bin_name}}"
+    mode: a+rx
+    remote_src: true
+  become: true
+
+# - name: folder permissions
+#   file:
+#     path: /opt
+#     mode: a+rw
+#     recurse: true
+#     state: directory
+#   become: true
+
+- name: Install the platform on the controller.
+  shell: "./{{ bin_name }} --skipeula --default-password {{ ez_password }} >> {{ez_folder}}/installed.txt"
+  args:
+    creates: "{{ez_folder}}/installed.txt"
+    chdir: "{{ez_folder}}"
+
+- name: Configure bluedata
+  shell: /opt/bluedata/common-install/scripts/start_install.py -c {{ansible_default_ipv4.address}} -p "{{ ez_password }}" -k no -t 60 --routable no -d {{hcpdomain}} --cin "{{ project_id }}" --no-local-tenant-storage >> {{ez_folder}}/configured.txt
+
+  args:
+    creates: "{{ez_folder}}/configured.txt"
+    chdir: "{{ez_folder}}"
+
+- name: Get Ezmeral generated ssh key
+  slurp:
+    src: /opt/bluedata/keys/ssh_host_rsa_key.pub
+  register: ssh_keys
+  become: true
+
+- name: Update the ssh key permissions
+  copy:
+    src: /opt/bluedata/keys/ssh_host_rsa_key
+    dest: "{{ez_folder}}/ssh_host_rsa_key"
+    remote_src: true
+    mode: a+r
+  become: true
+
+- name: deploy keys on nodes 1
+  authorized_key: 
+    user: "adminuser"
+    key: "{{ item[1]  }}"
+  delegate_to: "{{ item[0] }}"
+  with_nested:
+    - "{{ groups['all'] }}"
+    - "{{ ssh_keys['content'] | b64decode }}"
+
+- name: install python3
+  package:
+    name:
+      - python3
+      - python3-pip
+      - expect
+    state: latest
+  become: true
+
+- name: Install hpecp cli
+  pip:
+    name: hpecp
+    state: latest    
+    executable: pip3
+    extra_args: --user
+

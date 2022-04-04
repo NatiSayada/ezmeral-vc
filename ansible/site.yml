@@ -1,0 +1,48 @@
+---
+
+- name: prep the servers
+  hosts: all
+  vars_files:
+    - roles/common/vars/vars.yml
+  become: true
+  roles:
+    - prep
+  gather_facts: true
+
+- hosts: controller
+  vars_files:
+    - roles/common/vars/vars.yml
+  roles:
+    - controller
+    - hpecp
+    
+# - name: setup nfs server
+#   vars_files:
+#     - roles/common/vars/vars.yml
+#   hosts: gateway
+#   become: true
+#   roles:
+#     - nfs-server
+
+# - hosts: controller
+#   vars_files:
+#     - roles/common/vars/vars.yml
+#   roles:
+#     - nfs-client
+#     - controller
+
+
+# - name: Update the worker setting
+#   vars_files:
+#     - roles/common/vars/vars.yml
+#   hosts: workers
+#   become: true
+#   roles:
+#     - nfs-client
+
+- name: Prep host
+  hosts: localhost
+  roles:
+    - localhost
+  vars_files:
+    - roles/common/vars/vars.yml

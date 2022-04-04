@@ -1,0 +1,8 @@
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted
+
+- name: add to cluster
+  debug: 
+    msg: "need to add the worker to the epic cluster here"
