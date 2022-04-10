@@ -16,4 +16,3 @@ ${ip}
 [all:vars]
 ansible_ssh_user=adminuser
 ansible_ssh_private_key_file=${ssh_key}
-ansible_sudo_pass=password
