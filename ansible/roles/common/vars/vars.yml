@@ -11,3 +11,4 @@ root_pass: "$6$rounds=656000$am7bAScCKIUb8JcN$gwSvQ7Oe6nukllJIGvKIVbDHxEL89ab3mS
 hcpdomain: "azhpe"
 project_id: ezlocal
 domain_name: ecp.demo
+k8s_version: "1.19.15"

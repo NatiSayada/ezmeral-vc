@@ -1,5 +1,4 @@
 ---
-
 - name: prep the servers
   hosts: all
   vars_files:
@@ -15,9 +14,16 @@
     - controller
     - hpecp
 
-- name: Prep host
-  hosts: localhost
-  roles:
-    - localhost
+- hosts: gateway[0]
   vars_files:
     - roles/common/vars/vars.yml
+  roles:
+    - nfs-server
+  become: true
+
+# - name: Prep host
+#   hosts: localhost
+#   roles:
+#     - localhost
+#   vars_files:
+#     - roles/common/vars/vars.yml

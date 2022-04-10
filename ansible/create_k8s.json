@@ -1,0 +1,36 @@
+{
+    "method": "post",
+    "apiurl": "http://127.0.0.1:8080/api/v2/k8scluster",
+    "timeout": 59,
+    "data": {
+        "label": {
+            "name": "k8s",
+            "description": ""
+        },
+        "k8shosts_config": [
+            {
+                "role": "master",
+                "node": "/api/v2/worker/k8shost/5"
+            },
+            {
+                "role": "worker",
+                "node": "/api/v2/worker/k8shost/8"
+            },
+            {
+                "role": "worker",
+                "node": "/api/v2/worker/k8shost/7"
+            },
+            {
+                "role": "worker",
+                "node": "/api/v2/worker/k8shost/6"
+            }
+        ],
+        "k8s_version": "1.21.5",
+        "pod_network_range": "10.192.0.0/12",
+        "service_network_range": "10.96.0.0/12",
+        "pod_dns_domain": "cluster.local",
+        "addons": [],
+        "datafabric": false
+    },
+    "op": ""
+}

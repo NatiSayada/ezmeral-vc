@@ -24,6 +24,12 @@ resource "vsphere_virtual_machine" "vm" {
     thin_provisioned = true
     unit_number      = 1
   }
+  disk {
+    label            = "disk2"
+    size             = 512
+    thin_provisioned = true
+    unit_number      = 2
+  }
   clone {
     template_uuid = data.vsphere_virtual_machine.template.id
     customize {
