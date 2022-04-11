@@ -14,12 +14,12 @@
     - controller
     - hpecp
 
-- hosts: gateway[0]
-  vars_files:
-    - roles/common/vars/vars.yml
-  roles:
-    - nfs-server
-  become: true
+# - hosts: gateway[0]
+#   vars_files:
+#     - roles/common/vars/vars.yml
+#   roles:
+#     - nfs-server
+#   become: true
 
 # - name: Prep host
 #   hosts: localhost

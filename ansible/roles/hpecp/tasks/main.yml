@@ -58,18 +58,18 @@
 - set_fact:
     master_list: "{{ worker_ids[:1] | map('regex_replace', '$', ':master') | list }}"
 - set_fact:
-    worker_list: "{{ worker_ids[-1:] | map('regex_replace', '$', ':worker') | list }}"
+    worker_list: "{{ worker_ids[1:] | map('regex_replace', '$', ':worker') | list }}"
 - set_fact:
     k8shost_list: "{{ master_list + worker_list }}"
 
-- debug: "msg={{ k8shost_list }}"
-- debug: "msg={{ worker_ids[-1:] }}"
+- debug: "msg={{ worker_list }}"
+- debug: "msg={{ master_list }}"
 
-- name: Creating K8s cluster
-  shell: |
-    ~/.local/bin/hpecp k8scluster create \
-    --name k8scluster \
-    --k8s_version "{{ k8s_version }}" \
-    --k8shosts-config {{ k8shost_list | join(',')  }} \
-  ignore_errors: True
-  when: k8s_clusters.stdout == "0"
+# - name: Creating K8s cluster
+#   shell: |
+#     ~/.local/bin/hpecp k8scluster create \
+#     --name k8scluster \
+#     --k8s_version "{{ k8s_version }}" \
+#     --k8shosts-config {{ k8shost_list | join(',')  }} \
+#   ignore_errors: True
+#   when: k8s_clusters.stdout == "0"
