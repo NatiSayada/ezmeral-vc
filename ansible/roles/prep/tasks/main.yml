@@ -89,3 +89,7 @@
   loop:
     - net.ipv4.conf.eth0.arp_ignore=0
     - net.ipv4.conf.eth0.arp_announce=0
+
+- name: Disable Firewall
+  firewalld:
+    state: disabled

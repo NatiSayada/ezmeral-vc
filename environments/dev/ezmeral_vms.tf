@@ -36,6 +36,27 @@ variable "ez-worker" {
       ssh_key       = "~/.ssh/ez_rsa.pub"
       template_name = "hpe-ecp-template"
       folder        = "ezmeral/stg"
+    },
+    ez-worker-04 = {
+      cpus          = 32
+      memory        = 65536
+      ssh_key       = "~/.ssh/ez_rsa.pub"
+      template_name = "hpe-ecp-template"
+      folder        = "ezmeral/stg"
+    },
+    ez-worker-05 = {
+      cpus          = 32
+      memory        = 65536
+      ssh_key       = "~/.ssh/ez_rsa.pub"
+      template_name = "hpe-ecp-template"
+      folder        = "ezmeral/stg"
+    },
+    ez-worker-06 = {
+      cpus          = 32
+      memory        = 65536
+      ssh_key       = "~/.ssh/ez_rsa.pub"
+      template_name = "hpe-ecp-template"
+      folder        = "ezmeral/stg"
     }
   }
 }

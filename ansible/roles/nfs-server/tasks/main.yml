@@ -2,7 +2,7 @@
   file:
     path: /mnt/ezmeral-data
     state: directory
-    mode: '775'
+    mode: '0777'
 
 - name: enable rpcbind nfslock nfs
   service:
@@ -24,3 +24,7 @@
   notify:
     - restart nfs-server
     - run exportfs
+
+- name: Disable Firewall
+  firewalld:
+    state: disabled
