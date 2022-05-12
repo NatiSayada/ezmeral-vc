@@ -1,4 +1,4 @@
-# Depoly and configre HPE Ezmeral using Terraform and Ansible
+# POC - Depoly and configre HPE Ezmeral using Terraform and Ansible
 
 With this project you will be able to deploy and configure Ezmeral env using terraform.
 
